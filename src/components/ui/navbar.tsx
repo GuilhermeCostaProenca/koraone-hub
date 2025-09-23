@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -18,6 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuthStore } from '@/stores/authStore';
+import { useNavbar } from '@/contexts/NavbarContext';
 import { cn } from '@/lib/utils';
 
 const navigationItems = [
@@ -30,8 +30,7 @@ const navigationItems = [
 ];
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const { isCollapsed, setIsCollapsed, isOpen, setIsOpen } = useNavbar();
   const location = useLocation();
   const { user, logout } = useAuthStore();
 

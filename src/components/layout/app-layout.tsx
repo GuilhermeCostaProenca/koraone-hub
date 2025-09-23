@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 import { Navbar } from '@/components/ui/navbar';
 import { motion } from 'framer-motion';
+import { useNavbar } from '@/contexts/NavbarContext';
+import { cn } from '@/lib/utils';
 
 interface AppLayoutProps {
   children: ReactNode;
@@ -10,11 +12,17 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children, title, subtitle, action }: AppLayoutProps) {
+  const { isCollapsed } = useNavbar();
+  
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       
-      <main className="lg:ml-70 p-6">
+      <main className={cn(
+        "transition-all duration-300 ease-in-out p-6",
+        "lg:ml-20", // collapsed width
+        !isCollapsed && "lg:ml-70" // expanded width
+      )}>
         {(title || subtitle || action) && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
