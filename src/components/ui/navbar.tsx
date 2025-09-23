@@ -11,7 +11,9 @@ import {
   LogOut, 
   Menu, 
   X,
-  Sparkles
+  Sparkles,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -29,12 +31,17 @@ const navigationItems = [
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const location = useLocation();
   const { user, logout } = useAuthStore();
 
   const handleLogout = () => {
     logout();
     setIsOpen(false);
+  };
+
+  const toggleCollapse = () => {
+    setIsCollapsed(!isCollapsed);
   };
 
   return (
@@ -67,25 +74,54 @@ export function Navbar() {
         {(isOpen || window.innerWidth >= 1024) && (
           <motion.nav
             initial={window.innerWidth < 1024 ? { x: -280 } : false}
-            animate={{ x: 0 }}
+            animate={{ x: 0, width: isCollapsed ? 80 : 280 }}
             exit={{ x: -280 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             className={cn(
-              "fixed top-0 left-0 h-screen w-70 bg-card border-r border-border z-50",
-              "flex flex-col shadow-elevation lg:translate-x-0"
+              "fixed top-0 left-0 h-screen bg-card border-r border-border z-50",
+              "flex flex-col shadow-elevation lg:translate-x-0",
+              isCollapsed ? "w-20" : "w-70"
             )}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-border">
-              <div className="flex items-center gap-3">
+            <div className={cn(
+              "flex items-center border-b border-border",
+              isCollapsed ? "justify-center p-4" : "justify-between p-6"
+            )}>
+              {!isCollapsed ? (
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+                    <Sparkles className="h-4 w-4 text-primary-foreground" />
+                  </div>
+                  <div>
+                    <h1 className="font-bold text-lg">KoraOne</h1>
+                    <p className="text-xs text-muted-foreground">Innovation Hub</p>
+                  </div>
+                </div>
+              ) : (
                 <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
                   <Sparkles className="h-4 w-4 text-primary-foreground" />
                 </div>
-                <div>
-                  <h1 className="font-bold text-lg">KoraOne</h1>
-                  <p className="text-xs text-muted-foreground">Innovation Hub</p>
-                </div>
-              </div>
+              )}
               
+              {/* Desktop collapse button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleCollapse}
+                className={cn(
+                  "hidden lg:flex",
+                  isCollapsed && "absolute -right-3 top-6 bg-card border border-border rounded-full w-6 h-6 p-0"
+                )}
+              >
+                {isCollapsed ? (
+                  <ChevronRight className="h-3 w-3" />
+                ) : (
+                  <ChevronLeft className="h-4 w-4" />
+                )}
+              </Button>
+
+              {/* Mobile close button */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -97,7 +133,7 @@ export function Navbar() {
             </div>
 
             {/* User Info */}
-            {user && (
+            {user && !isCollapsed && (
               <div className="p-6 border-b border-border">
                 <div className="flex items-center gap-3">
                   <Avatar className="h-10 w-10">
@@ -113,8 +149,19 @@ export function Navbar() {
               </div>
             )}
 
+            {/* Collapsed User Avatar */}
+            {user && isCollapsed && (
+              <div className="p-3 border-b border-border flex justify-center">
+                <Avatar className="h-8 w-8">
+                  <AvatarFallback className="bg-primary text-primary-foreground font-medium text-xs">
+                    {user.avatar}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+            )}
+
             {/* Navigation */}
-            <div className="flex-1 p-4 space-y-2">
+            <div className={cn("flex-1 space-y-2", isCollapsed ? "p-2" : "p-4")}>
               {navigationItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.href;
@@ -125,27 +172,33 @@ export function Navbar() {
                     to={item.href}
                     onClick={() => setIsOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 px-4 py-3 rounded-xl transition-colors",
+                      "flex items-center rounded-xl transition-colors",
                       "hover:bg-secondary/50",
-                      isActive && "bg-primary/10 text-primary border border-primary/20"
+                      isActive && "bg-primary/10 text-primary border border-primary/20",
+                      isCollapsed ? "justify-center p-3" : "gap-3 px-4 py-3"
                     )}
+                    title={isCollapsed ? item.name : undefined}
                   >
                     <Icon className="h-5 w-5 flex-shrink-0" />
-                    <span className="font-medium">{item.name}</span>
+                    {!isCollapsed && <span className="font-medium">{item.name}</span>}
                   </Link>
                 );
               })}
             </div>
 
             {/* Logout */}
-            <div className="p-4 border-t border-border">
+            <div className={cn("border-t border-border", isCollapsed ? "p-2" : "p-4")}>
               <Button
                 variant="ghost"
                 onClick={handleLogout}
-                className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive"
+                className={cn(
+                  "w-full text-muted-foreground hover:text-destructive",
+                  isCollapsed ? "justify-center p-3" : "justify-start gap-3"
+                )}
+                title={isCollapsed ? "Sair" : undefined}
               >
                 <LogOut className="h-5 w-5" />
-                Sair
+                {!isCollapsed && "Sair"}
               </Button>
             </div>
           </motion.nav>
@@ -153,7 +206,10 @@ export function Navbar() {
       </AnimatePresence>
 
       {/* Spacer for desktop */}
-      <div className="hidden lg:block w-70 flex-shrink-0" />
+      <div className={cn(
+        "hidden lg:block flex-shrink-0 transition-all duration-300 ease-in-out",
+        isCollapsed ? "w-20" : "w-70"
+      )} />
     </>
   );
 }
