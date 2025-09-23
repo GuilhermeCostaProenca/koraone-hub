@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Navbar } from '@/components/ui/navbar';
+import { AppLayout } from '@/components/layout/app-layout';
 import { useIdeaStore } from '@/stores/ideaStore';
 import { Idea, IdeaStatus } from '@/types';
 import 'leaflet/dist/leaflet.css';
@@ -59,31 +59,16 @@ export default function MapView() {
   const center: [number, number] = [-23.5505, -46.6333];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <main className="lg:ml-70 p-6 space-y-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between"
-        >
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Map className="h-8 w-8 text-primary" />
-              Mapa de Ideias
-            </h1>
-            <p className="text-muted-foreground">
-              Explore projetos inovadores em todo o ecossistema
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Navigation className="h-4 w-4" />
-            {mapIdeas.length} ideias localizadas
-          </div>
-        </motion.div>
+    <AppLayout
+      title="Mapa de Ideias"
+      subtitle="Explore projetos inovadores em todo o ecossistema"
+      action={
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Navigation className="h-4 w-4" />
+          {mapIdeas.length} ideias localizadas
+        </div>
+      }
+    >
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-200px)]">
           {/* Map */}
@@ -274,7 +259,6 @@ export default function MapView() {
             </Card>
           </motion.div>
         </div>
-      </main>
-    </div>
+    </AppLayout>
   );
 }
