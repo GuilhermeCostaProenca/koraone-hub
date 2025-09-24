@@ -15,6 +15,9 @@ import Ideas from "./pages/Ideas";
 import MapView from "./pages/MapView";
 import Trail from "./pages/Trail";
 import Insights from "./pages/Insights";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
+import Assistant from "./pages/Assistant";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -91,6 +94,30 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Insights />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <ProtectedRoute>
+                  <Projects />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects/:id"
+              element={
+                <ProtectedRoute>
+                  <ProjectDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assistant"
+              element={
+                <ProtectedRoute>
+                  <Assistant />
                 </ProtectedRoute>
               }
             />

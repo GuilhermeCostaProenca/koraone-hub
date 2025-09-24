@@ -35,12 +35,29 @@ L.Marker.prototype.options.icon = DefaultIcon;
 export default function MapView() {
   const { ideas, fetchIdeas } = useIdeaStore();
   const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
+  const [mapIdeas, setMapIdeas] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchIdeas();
-  }, [fetchIdeas]);
+    const fetchMapIdeas = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/ideas/map');
+        const data = await response.json();
+        setMapIdeas(data);
+        await fetchIdeas(); // Also fetch all ideas for potential selection
+      } catch (error) {
+        console.error('Error fetching map ideas:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const mapIdeas = ideas.filter(idea => idea.location);
+    // Only render map on client side
+    if (typeof window !== 'undefined') {
+      fetchMapIdeas();
+    }
+  }, [fetchIdeas]);
 
   const getStatusColor = (status: IdeaStatus) => {
     switch (status) {
@@ -57,6 +74,20 @@ export default function MapView() {
 
   // São Paulo center coordinates
   const center: [number, number] = [-23.5505, -46.6333];
+
+  // Don't render anything on server side
+  if (typeof window === 'undefined' || loading) {
+    return (
+      <AppLayout
+        title="Mapa de Ideias"
+        subtitle="Carregando..."
+      >
+        <div className="flex items-center justify-center h-96">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout
@@ -91,12 +122,15 @@ export default function MapView() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
                   
-                  {mapIdeas.map((idea) => (
+                  {mapIdeas.filter(idea => idea.lat && idea.lng).map((idea) => (
                     <Marker
                       key={idea.id}
-                      position={[idea.location!.lat, idea.location!.lng]}
+                      position={[idea.lat, idea.lng]}
                       eventHandlers={{
-                        click: () => setSelectedIdea(idea),
+                        click: () => {
+                          const fullIdea = ideas.find(i => i.id === idea.id) || idea;
+                          setSelectedIdea(fullIdea);
+                        },
                       }}
                     >
                       <Popup>
@@ -104,27 +138,29 @@ export default function MapView() {
                           <div className="flex items-center gap-2 mb-2">
                             <Avatar className="h-8 w-8">
                               <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                                {idea.author.avatar}
+                                {idea.author?.avatar || 'U'}
                               </AvatarFallback>
                             </Avatar>
                             <div>
                               <p className="font-semibold text-sm">{idea.title}</p>
-                              <p className="text-xs text-gray-600">{idea.author.name}</p>
+                              <p className="text-xs text-gray-600">{idea.author?.name || 'Unknown'}</p>
                             </div>
                           </div>
                           
-                          <p className="text-sm text-gray-700 mb-3 line-clamp-3">
-                            {idea.description}
-                          </p>
-                          
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between mb-3">
                             <Badge className={getStatusColor(idea.status)}>
                               {idea.status}
                             </Badge>
-                            <div className="flex items-center gap-1 text-sm text-gray-600">
-                              <Heart className="h-3 w-3" />
-                              {idea.likes}
-                            </div>
+                            <Button 
+                              variant="link" 
+                              size="sm" 
+                              asChild
+                              className="p-0 h-auto text-xs"
+                            >
+                              <a href={`/ideas?highlight=${idea.id}`}>
+                                Ver no feed
+                              </a>
+                            </Button>
                           </div>
                         </div>
                       </Popup>

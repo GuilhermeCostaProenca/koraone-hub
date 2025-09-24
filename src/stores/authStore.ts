@@ -22,20 +22,39 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isAuthenticated: false,
 
   login: async (email: string) => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    const user = mockUsers.find(u => u.email === email) || mockUsers[0];
-    const token = 'mock-jwt-token-' + Date.now();
-    
-    localStorage.setItem('koraone_token', token);
-    localStorage.setItem('koraone_user', JSON.stringify(user));
-    
-    set({
-      user,
-      token,
-      isAuthenticated: true
-    });
+    try {
+      // Try login first
+      const loginResponse = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      let data;
+      if (loginResponse.ok) {
+        data = await loginResponse.json();
+      } else {
+        // If login fails, try register
+        const registerResponse = await fetch('/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        data = await registerResponse.json();
+      }
+
+      localStorage.setItem('koraone_token', data.token);
+      localStorage.setItem('koraone_user', JSON.stringify(data.user));
+      
+      set({
+        user: data.user,
+        token: data.token,
+        isAuthenticated: true
+      });
+    } catch (error) {
+      console.error('Login/Register error:', error);
+      throw error;
+    }
   },
 
   logout: () => {
