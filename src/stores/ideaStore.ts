@@ -73,60 +73,72 @@ export const useIdeaStore = create<IdeaState>((set, get) => ({
   loading: false,
 
   createIdea: async (data: IdeaCreateData, user: User) => {
-    set({ loading: true });
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    const newIdea: Idea = {
-      id: Date.now().toString(),
-      title: data.title,
-      description: data.description,
-      impact: data.impact,
-      location: data.location,
-      media: data.media ? URL.createObjectURL(data.media) : undefined,
-      author: user,
-      status: 'enviada',
-      likes: 0,
-      createdAt: new Date().toISOString()
-    };
-    
-    set(state => ({
-      ideas: [newIdea, ...state.ideas],
-      loading: false
-    }));
+    try {
+      set({ loading: true });
+      
+      const newIdea = {
+        title: data.title,
+        description: data.description,
+        impact: data.impact,
+        location: data.location,
+        author: user
+      };
+      
+      const response = await fetch('/ideas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newIdea)
+      });
+      
+      const createdIdea = await response.json();
+      
+      set(state => ({
+        ideas: [createdIdea, ...state.ideas],
+        loading: false
+      }));
+      
+      return createdIdea;
+    } catch (error) {
+      console.error('Error creating idea:', error);
+      set({ loading: false });
+    }
   },
 
   fetchIdeas: async (mine = false) => {
-    set({ loading: true });
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    const { ideas } = get();
-    
-    if (mine) {
-      const currentUser = JSON.parse(localStorage.getItem('koraone_user') || '{}');
-      const myIdeas = ideas.filter(idea => idea.author.id === currentUser.id);
-      set({ myIdeas, loading: false });
-    } else {
+    try {
+      set({ loading: true });
+      const response = await fetch('/ideas');
+      const data = await response.json();
+      
+      if (mine) {
+        const currentUser = JSON.parse(localStorage.getItem('koraone_user') || '{}');
+        const myIdeas = data.filter((idea: Idea) => idea.author.id === currentUser.id);
+        set({ ideas: data, myIdeas, loading: false });
+      } else {
+        set({ ideas: data, loading: false });
+      }
+    } catch (error) {
+      console.error('Error fetching ideas:', error);
       set({ loading: false });
     }
   },
 
   likeIdea: async (id: string) => {
-    const { ideas } = get();
-    
-    set({
-      ideas: ideas.map(idea => 
-        idea.id === id 
-          ? { ...idea, likes: idea.likes + 1, isLiked: true }
-          : idea
-      )
-    });
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 300));
+    try {
+      const response = await fetch(`/ideas/${id}/like`, { method: 'POST' });
+      const { likes } = await response.json();
+      
+      const { ideas } = get();
+      set({
+        ideas: ideas.map(idea => 
+          idea.id === id 
+            ? { ...idea, likes, isLiked: true }
+            : idea
+        )
+      });
+    } catch (error) {
+      console.error('Error liking idea:', error);
+    }
   },
 
   getMapIdeas: () => {

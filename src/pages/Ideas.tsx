@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Plus, Heart, Filter, Search, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,10 +18,24 @@ export default function Ideas() {
   const [filteredIdeas, setFilteredIdeas] = useState<Idea[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchParams] = useSearchParams();
+  const highlightId = searchParams.get('highlight');
 
   useEffect(() => {
     fetchIdeas();
   }, [fetchIdeas]);
+
+  // Scroll to highlighted idea
+  useEffect(() => {
+    if (highlightId) {
+      setTimeout(() => {
+        const element = document.getElementById(`idea-${highlightId}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+    }
+  }, [highlightId, ideas]);
 
   useEffect(() => {
     let filtered = ideas;
@@ -159,13 +173,14 @@ export default function Ideas() {
             filteredIdeas.map((idea, index) => (
               <motion.div
                 key={idea.id}
+                id={`idea-${idea.id}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ scale: 1.02 }}
-                className="group"
+                className={`group ${highlightId === idea.id ? 'animate-pulse' : ''}`}
               >
-                <Card className="h-full glass-effect hover:shadow-elevation transition-all duration-300">
+                <Card className={`h-full glass-effect hover:shadow-elevation transition-all duration-300 ${highlightId === idea.id ? 'ring-2 ring-primary bg-primary/5' : ''}`}>
                   <CardContent className="p-6 h-full flex flex-col">
                     {/* Header */}
                     <div className="flex items-start justify-between mb-4">
@@ -219,11 +234,21 @@ export default function Ideas() {
                         {idea.likes}
                       </Button>
                       
-                      {idea.location && (
-                        <Badge variant="outline" className="text-xs">
-                          📍 Localizado
-                        </Badge>
-                      )}
+                      <div className="flex items-center gap-2">
+                        {idea.location && (
+                          <Badge variant="outline" className="text-xs">
+                            📍 Localizado
+                          </Badge>
+                        )}
+                        
+                        {idea.status === 'aprovada' && (
+                          <Link to="/projects">
+                            <Button size="sm" variant="outline" className="text-xs">
+                              💡 Criar Projeto
+                            </Button>
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

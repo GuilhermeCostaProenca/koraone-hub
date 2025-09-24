@@ -252,13 +252,19 @@ export default function Projects() {
                       variant="ghost" 
                       size="sm"
                       className="opacity-0 group-hover:opacity-100 transition-opacity"
-                      asChild
-                    >
-                      <Link to={`/projects/${project.id}`}>
-                        Ver detalhes
-                        <ChevronRight className="h-3 w-3 ml-1" />
-                      </Link>
-                    </Button>
+                          asChild
+                        >
+                          <Link to={`/projects/${project.id}`}>
+                            Ver detalhes
+                            <ChevronRight className="h-3 w-3 ml-1" />
+                          </Link>
+                        </Button>
+                        
+                        {project.status === 'ATIVO' && (
+                          <div className="text-xs text-muted-foreground mt-2">
+                            💡 Convertido de uma ideia aprovada
+                          </div>
+                        )}
                   </div>
                 </CardContent>
               </Card>

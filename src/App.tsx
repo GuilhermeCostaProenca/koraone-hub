@@ -121,7 +121,7 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </BrowserRouter>
         </NavbarProvider>

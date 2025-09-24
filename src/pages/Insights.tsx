@@ -58,18 +58,21 @@ export default function Insights() {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate API call to Aurora insights
-    const fetchInsights = async () => {
+  const fetchInsights = async () => {
+    try {
       setLoading(true);
-      
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      const response = await fetch('/aurora/insights');
+      const data = await response.json();
+      setInsights(data);
+    } catch (error) {
+      console.error('Error fetching insights:', error);
       setInsights(mockInsights);
+    } finally {
       setLoading(false);
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchInsights();
   }, []);
 
@@ -224,9 +227,12 @@ export default function Insights() {
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button className="bg-gradient-primary hover:opacity-90">
+                  <Button 
+                    className="bg-gradient-primary hover:opacity-90"
+                    onClick={fetchInsights}
+                  >
                     <Brain className="h-4 w-4 mr-2" />
-                    Solicitar Análise Personalizada
+                    Gerar Novas Recomendações
                   </Button>
                   
                   <Button variant="outline">
