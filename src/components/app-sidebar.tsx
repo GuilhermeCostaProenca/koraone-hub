@@ -9,9 +9,8 @@ import {
   MessageCircle,
   FolderOpen
 } from 'lucide-react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   Sidebar,
   SidebarContent,
@@ -26,6 +25,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { useAuth } from '@/auth';
+import { cn } from '@/lib/utils';
 
 const navigationItems = [
   { title: 'Início', url: '/dashboard', icon: Home },
@@ -40,17 +40,12 @@ const navigationItems = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const currentPath = location.pathname;
 
   const isCollapsed = state === 'collapsed';
   const isActive = (path: string) => currentPath === path;
-  const isExpanded = navigationItems.some((item) => isActive(item.url));
-
-  const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive 
-      ? "bg-primary/10 text-primary border border-primary/20 font-medium" 
-      : "hover:bg-secondary/50";
 
   return (
     <Sidebar
@@ -95,21 +90,25 @@ export function AppSidebar() {
           <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navigationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink 
-                      to={item.url} 
-                      end 
-                      className={getNavCls}
+              {navigationItems.map((item) => {
+                const Icon = item.icon;
+                const active = isActive(item.url);
+                
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton 
+                      onClick={() => navigate(item.url)}
+                      className={cn(
+                        active && "bg-primary/10 text-primary border border-primary/20 font-medium"
+                      )}
                       title={isCollapsed ? item.title : undefined}
                     >
-                      <item.icon className="h-4 w-4" />
-                      {!isCollapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                      <Icon className="h-4 w-4" />
+                      <span>{item.title}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -118,16 +117,13 @@ export function AppSidebar() {
       <SidebarFooter className="border-t border-border">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <Button
-                variant="ghost"
-                onClick={logout}
-                className="w-full text-muted-foreground hover:text-destructive justify-start"
-                title={isCollapsed ? "Sair" : undefined}
-              >
-                <LogOut className="h-4 w-4" />
-                {!isCollapsed && <span>Sair</span>}
-              </Button>
+            <SidebarMenuButton 
+              onClick={logout}
+              className="text-muted-foreground hover:text-destructive"
+              title={isCollapsed ? "Sair" : undefined}
+            >
+              <LogOut className="h-4 w-4" />
+              <span>Sair</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
