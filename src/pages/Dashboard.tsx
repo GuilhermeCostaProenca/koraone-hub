@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { MainLayout } from '@/components/layout/main-layout';
+import { Navbar } from '@/components/ui/navbar';
 import { LoadingSkeleton, CardSkeleton } from '@/components/ui/loading-skeleton';
 import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
@@ -57,11 +57,24 @@ export default function Dashboard() {
   const approvedIdeas = ideas.filter(idea => idea.status === 'aprovada').length;
 
   return (
-    <MainLayout 
-      title={`Olá, ${user?.name?.split(' ')[0] || 'Colaborador'}! 👋`}
-      subtitle="Bem-vindo ao Hub de Inovação Corporativa"
-    >
-      <div className="space-y-8">
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      
+      <main className="lg:ml-70 p-6 space-y-8">
+        {/* Welcome Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-2"
+        >
+          <h1 className="text-4xl font-bold">
+            Olá, {user?.name?.split(' ')[0]} 👋
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Pronto para transformar ideias em inovação?
+          </p>
+        </motion.div>
+
         {/* KPIs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -219,7 +232,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </motion.div>
-      </div>
-    </MainLayout>
+      </main>
+    </div>
   );
 }
