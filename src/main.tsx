@@ -3,7 +3,7 @@ import App from "./App.tsx";
 import "./index.css";
 import { ErrorBoundary } from './components/ErrorBoundary';
 
-// Enable MSW in development (non-blocking)
+// Enable MSW in development (blocking - wait for it to start)
 async function enableMocking() {
   if (process.env.NODE_ENV !== 'development') {
     return;
@@ -15,18 +15,21 @@ async function enableMocking() {
       onUnhandledRequest: 'bypass',
       quiet: true 
     });
-    console.log('🔧 MSW enabled');
+    console.log('🔧 MSW enabled and ready');
   } catch (error) {
     console.warn('⚠️ MSW failed to start:', error);
   }
 }
 
-// Start app immediately, MSW loads in parallel
-createRoot(document.getElementById("root")!).render(
-  <ErrorBoundary>
-    <App />
-  </ErrorBoundary>
-);
+// Initialize MSW first, then start app
+async function startApp() {
+  await enableMocking();
+  
+  createRoot(document.getElementById("root")!).render(
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
+  );
+}
 
-// Initialize MSW in background
-enableMocking();
+startApp();
