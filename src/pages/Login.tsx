@@ -1,37 +1,32 @@
 import { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, CreditCard, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuth } from '@/auth';
 import { useToast } from '@/hooks/use-toast';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, isAuthenticated } = useAuthStore();
+  const { login, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   const handleLogin = async (loginEmail: string) => {
     setLoading(true);
     try {
       await login(loginEmail);
-      toast({
-        title: "Bem-vindo ao KoraOne!",
-        description: "Login realizado com sucesso.",
-      });
+      navigate('/');
     } catch (error) {
-      toast({
-        title: "Erro no login",
-        description: "Tente novamente em alguns instantes.",
-        variant: "destructive",
-      });
+      // Only show error in real auth mode
+      console.error('Login error:', error);
     } finally {
       setLoading(false);
     }

@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { AppLayout } from '@/components/layout/app-layout';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuth } from '@/auth';
 import { useToast } from '@/hooks/use-toast';
 
 interface ChatMessage {
@@ -46,7 +46,7 @@ export default function Assistant() {
   const [inputMessage, setInputMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const { toast } = useToast();
 
   const scrollToBottom = () => {

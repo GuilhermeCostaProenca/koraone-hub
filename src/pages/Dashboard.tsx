@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Navbar } from '@/components/ui/navbar';
 import { LoadingSkeleton, CardSkeleton } from '@/components/ui/loading-skeleton';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
 
 const ctaCards = [
@@ -45,7 +45,7 @@ const ctaCards = [
 ];
 
 export default function Dashboard() {
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const { ideas, loading, fetchIdeas } = useIdeaStore();
 
   useEffect(() => {

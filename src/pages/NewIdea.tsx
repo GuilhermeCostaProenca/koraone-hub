@@ -7,14 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Navbar } from '@/components/ui/navbar';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
 import { useToast } from '@/hooks/use-toast';
 import { IdeaCreateData } from '@/types';
 
 export default function NewIdea() {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const { createIdea, loading } = useIdeaStore();
   const { toast } = useToast();
 

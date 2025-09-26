@@ -8,12 +8,12 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Navbar } from '@/components/ui/navbar';
 import { LoadingSkeleton, CardSkeleton } from '@/components/ui/loading-skeleton';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
 import { IdeaStatus } from '@/types';
 
 export default function Trail() {
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const { ideas, myIdeas, loading, fetchIdeas } = useIdeaStore();
 
   useEffect(() => {

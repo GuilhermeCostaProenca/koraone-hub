@@ -17,7 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { useAuthStore } from '@/stores/authStore';
+import { useAuth } from '@/auth';
 import { useNavbar } from '@/contexts/NavbarContext';
 import { cn } from '@/lib/utils';
 
@@ -34,7 +34,7 @@ const navigationItems = [
 // Mobile Sidebar Component
 function MobileSidebar() {
   const location = useLocation();
-  const { user, logout } = useAuthStore();
+  const { user, logout } = useAuth();
   const { setIsOpen } = useNavbar();
 
   const handleLogout = () => {
@@ -127,7 +127,7 @@ function MobileSidebar() {
 function DesktopSidebar() {
   const { isCollapsed, setIsCollapsed } = useNavbar();
   const location = useLocation();
-  const { user, logout } = useAuthStore();
+  const { user, logout } = useAuth();
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
