@@ -106,13 +106,13 @@ let runtimeProjects = [...staticDb.projects];
 let currentInsights = [...staticDb.insights];
 
 export const handlers = [
-  // Auth endpoints
+  // Auth endpoints - Accept any email
   http.post('/auth/login', async ({ request }) => {
     const { email } = await request.json() as { email: string };
     let user = runtimeUsers.find(u => u.email === email);
     
-    // Auto-create user for @koraone.com emails if not found
-    if (!user && email.endsWith('@koraone.com')) {
+    // Create user for ANY email if not found
+    if (!user) {
       const name = email.split('@')[0].split('.').map(part => 
         part.charAt(0).toUpperCase() + part.slice(1)
       ).join(' ');
@@ -127,30 +127,34 @@ export const handlers = [
       runtimeUsers.push(user);
     }
     
-    if (user) {
-      return HttpResponse.json({
-        user,
-        token: `mock-token-${Date.now()}`
-      });
-    }
-    
-    return HttpResponse.json({ error: 'User not found' }, { status: 404 });
+    return HttpResponse.json({
+      user,
+      token: `mock-token-${Date.now()}`
+    });
   }),
 
   http.post('/auth/register', async ({ request }) => {
     const { email } = await request.json() as { email: string };
+    let user = runtimeUsers.find(u => u.email === email);
     
-    const newUser = {
-      id: String(runtimeUsers.length + 1),
-      name: 'Novo Usuário',
-      email,
-      avatar: email.charAt(0).toUpperCase() + email.charAt(email.indexOf('@') - 1).toUpperCase()
-    };
-    
-    runtimeUsers.push(newUser);
+    // Create user for ANY email if not found
+    if (!user) {
+      const name = email.split('@')[0].split('.').map(part => 
+        part.charAt(0).toUpperCase() + part.slice(1)
+      ).join(' ');
+      
+      user = {
+        id: String(runtimeUsers.length + 1),
+        name,
+        email,
+        avatar: name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
+      };
+      
+      runtimeUsers.push(user);
+    }
     
     return HttpResponse.json({
-      user: newUser,
+      user,
       token: `mock-token-${Date.now()}`
     });
   }),
