@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { AppLayout } from '@/components/layout/app-layout';
+import { MainLayout } from '@/components/layout/main-layout';
 import L from 'leaflet';
 import { Link } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
@@ -75,7 +75,7 @@ export default function MapView() {
   // Don't render anything on server side
   if (typeof window === 'undefined' || loading) {
     return (
-      <AppLayout
+      <MainLayout
         title="Mapa de Ideias"
         subtitle="Explore projetos inovadores em todo o ecossistema"
       >
@@ -83,12 +83,12 @@ export default function MapView() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           <span className="ml-2">Carregando ideias no mapa...</span>
         </div>
-      </AppLayout>
+      </MainLayout>
     );
   }
 
   return (
-    <AppLayout
+    <MainLayout
       title="Mapa de Ideias"
       subtitle="Explore projetos inovadores em todo o ecossistema"
       action={
@@ -165,6 +165,6 @@ export default function MapView() {
             </div>
           </CardContent>
         </Card>
-    </AppLayout>
+    </MainLayout>
   );
 }

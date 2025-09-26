@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { AppLayout } from '@/components/layout/app-layout';
+import { MainLayout } from '@/components/layout/main-layout';
 import { useAuth } from '@/auth';
 import { useToast } from '@/hooks/use-toast';
 
@@ -132,7 +132,7 @@ export default function Assistant() {
   };
 
   return (
-    <AppLayout
+    <MainLayout
       title="Aurora IA"
       subtitle="Sua assistente inteligente de inovação"
     >
@@ -283,6 +283,6 @@ export default function Assistant() {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>
+    </MainLayout>
   );
 }

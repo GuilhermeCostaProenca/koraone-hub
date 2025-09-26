@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Navbar } from '@/components/ui/navbar';
+import { MainLayout } from '@/components/layout/main-layout';
 import { LoadingSkeleton, CardSkeleton } from '@/components/ui/loading-skeleton';
 import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
@@ -20,19 +20,23 @@ export default function Trail() {
     if (user) {
       fetchIdeas(true); // Fetch only my ideas
     }
-  }, [fetchIdeas, user]);
+  }, [user, fetchIdeas]);
 
-  const userIdeas = ideas.filter(idea => idea.author.id === user?.id) || [];
-  const sentIdeas = userIdeas.filter(idea => idea.status === 'enviada').length;
-  const approvedIdeas = userIdeas.filter(idea => idea.status === 'aprovada').length;
-  const totalLikes = userIdeas.reduce((sum, idea) => sum + idea.likes, 0);
+  const getStatusStats = () => {
+    return {
+      sent: myIdeas.filter(idea => idea.status === 'enviada').length,
+      review: myIdeas.filter(idea => idea.status === 'em avaliação').length,
+      approved: myIdeas.filter(idea => idea.status === 'aprovada').length,
+      totalLikes: myIdeas.reduce((sum, idea) => sum + idea.likes, 0)
+    };
+  };
 
   const getStatusColor = (status: IdeaStatus) => {
     switch (status) {
       case 'aprovada':
         return 'bg-status-approved text-white';
       case 'em avaliação':
-        return 'bg-status-review text-black';
+        return 'bg-status-review text-white';
       case 'enviada':
         return 'bg-status-sent text-white';
       default:
@@ -53,36 +57,23 @@ export default function Trail() {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <main className="lg:ml-70 p-6 space-y-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
-        >
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Route className="h-8 w-8 text-primary" />
-              Minha Trilha
-            </h1>
-            <p className="text-muted-foreground">
-              Acompanhe seu progresso e impacto na inovação
-            </p>
-          </div>
-          
-          <Link to="/idea/new">
-            <Button className="bg-gradient-primary hover:opacity-90">
-              <Plus className="h-4 w-4 mr-2" />
-              Nova Ideia
-            </Button>
-          </Link>
-        </motion.div>
+  const stats = getStatusStats();
 
-        {/* KPIs */}
+  return (
+    <MainLayout
+      title="Minha Trilha"
+      subtitle="Acompanhe o progresso das suas ideias e conquistas"
+      action={
+        <Link to="/idea/new">
+          <Button className="bg-gradient-primary hover:opacity-90">
+            <Plus className="h-4 w-4 mr-2" />
+            Nova Ideia
+          </Button>
+        </Link>
+      }
+    >
+      <div className="space-y-8">
+        {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -93,10 +84,22 @@ export default function Trail() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Ideias Enviadas</p>
-                  <p className="text-2xl font-bold text-primary">{sentIdeas}</p>
+                  <p className="text-sm text-muted-foreground">Enviadas</p>
+                  <p className="text-3xl font-bold text-primary">{stats.sent}</p>
                 </div>
-                <TrendingUp className="h-6 w-6 text-primary" />
+                <TrendingUp className="h-8 w-8 text-primary" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-effect">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">Em Avaliação</p>
+                  <p className="text-3xl font-bold text-warning">{stats.review}</p>
+                </div>
+                <Clock className="h-8 w-8 text-warning" />
               </div>
             </CardContent>
           </Card>
@@ -106,9 +109,9 @@ export default function Trail() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Aprovadas</p>
-                  <p className="text-2xl font-bold text-success">{approvedIdeas}</p>
+                  <p className="text-3xl font-bold text-success">{stats.approved}</p>
                 </div>
-                <CheckCircle2 className="h-6 w-6 text-success" />
+                <CheckCircle2 className="h-8 w-8 text-success" />
               </div>
             </CardContent>
           </Card>
@@ -117,22 +120,10 @@ export default function Trail() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Total de Likes</p>
-                  <p className="text-2xl font-bold text-warning">{totalLikes}</p>
+                  <p className="text-sm text-muted-foreground">Total Likes</p>
+                  <p className="text-3xl font-bold text-red-500">{stats.totalLikes}</p>
                 </div>
-                <Heart className="h-6 w-6 text-warning" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="glass-effect">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Score de Impacto</p>
-                  <p className="text-2xl font-bold text-primary">{(approvedIdeas * 10 + totalLikes * 2)}</p>
-                </div>
-                <Trophy className="h-6 w-6 text-primary" />
+                <Heart className="h-8 w-8 text-red-500" />
               </div>
             </CardContent>
           </Card>
@@ -146,30 +137,24 @@ export default function Trail() {
         >
           <Card className="glass-effect">
             <CardHeader>
-              <CardTitle className="text-xl">Minhas Ideias</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-2xl flex items-center gap-2">
+                  <Trophy className="h-6 w-6" />
+                  Minhas Ideias
+                </CardTitle>
+                <Badge variant="outline" className="text-primary border-primary">
+                  {myIdeas.length} {myIdeas.length === 1 ? 'ideia' : 'ideias'}
+                </Badge>
+              </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               {loading ? (
                 <div className="space-y-4">
                   {[1, 2, 3].map(i => <CardSkeleton key={i} />)}
                 </div>
-              ) : userIdeas.length === 0 ? (
-                <div className="text-center py-12">
-                  <Route className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">Sua trilha começa aqui</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Compartilhe sua primeira ideia e comece a impactar!
-                  </p>
-                  <Link to="/idea/new">
-                    <Button className="bg-gradient-primary hover:opacity-90">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Primeira Ideia
-                    </Button>
-                  </Link>
-                </div>
-              ) : (
+              ) : myIdeas.length > 0 ? (
                 <div className="space-y-4">
-                  {userIdeas.map((idea, index) => {
+                  {myIdeas.map((idea, index) => {
                     const StatusIcon = getStatusIcon(idea.status);
                     
                     return (
@@ -178,19 +163,26 @@ export default function Trail() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex items-start gap-4 p-4 rounded-xl border border-border/30 hover:border-border/60 transition-all bg-card/30 hover:bg-card/50"
+                        className="flex items-start gap-4 p-4 rounded-xl border border-border/30 hover:border-border/60 transition-colors bg-card/30"
                       >
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                        <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
                           <StatusIcon className="h-6 w-6 text-primary" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2 mb-2">
-                            <h4 className="font-semibold text-lg">{idea.title}</h4>
-                            <div className="flex items-center gap-2">
+                            <div>
+                              <h4 className="font-semibold text-lg mb-1">{idea.title}</h4>
+                              <p className="text-sm text-muted-foreground mb-2">
+                                Criada em {new Date(idea.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                            
+                            <div className="flex flex-col items-end gap-2">
                               <Badge className={getStatusColor(idea.status)}>
                                 {idea.status}
                               </Badge>
+                              
                               <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                 <Heart className="h-4 w-4" />
                                 {idea.likes}
@@ -198,30 +190,39 @@ export default function Trail() {
                             </div>
                           </div>
                           
-                          <p className="text-muted-foreground text-sm mb-3 line-clamp-2">
+                          <p className="text-muted-foreground text-sm line-clamp-2 mb-2">
                             {idea.description}
                           </p>
                           
-                          <div className="flex items-center justify-between text-xs text-muted-foreground">
-                            <span>
-                              Enviado em {new Date(idea.createdAt).toLocaleDateString('pt-BR')}
-                            </span>
-                            {idea.location && (
-                              <Badge variant="outline" className="text-xs">
-                                📍 Localizado
-                              </Badge>
-                            )}
+                          <div className="text-xs text-muted-foreground">
+                            <strong>Impacto esperado:</strong> {idea.impact}
                           </div>
                         </div>
                       </motion.div>
                     );
                   })}
                 </div>
+              ) : (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Route className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">Sua trilha está vazia</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Compartilhe sua primeira ideia e comece sua jornada de inovação!
+                  </p>
+                  <Link to="/idea/new">
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Enviar Primeira Ideia
+                    </Button>
+                  </Link>
+                </div>
               )}
             </CardContent>
           </Card>
         </motion.div>
-      </main>
-    </div>
+      </div>
+    </MainLayout>
   );
 }

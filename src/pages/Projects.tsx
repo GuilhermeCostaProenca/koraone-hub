@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AppLayout } from '@/components/layout/app-layout';
+import { MainLayout } from '@/components/layout/main-layout';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -83,7 +83,7 @@ export default function Projects() {
   const kpis = getKPIs();
 
   return (
-    <AppLayout
+    <MainLayout
       title="Meus Projetos"
       subtitle="Acompanhe o progresso dos seus projetos de inovação"
       action={
@@ -272,6 +272,6 @@ export default function Projects() {
           ))
         )}
       </motion.div>
-    </AppLayout>
+    </MainLayout>
   );
 }
