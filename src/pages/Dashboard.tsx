@@ -8,16 +8,13 @@ import {
   Plus, 
   TrendingUp, 
   Users, 
-  CheckCircle2,
-  Clock
+  CheckCircle2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { MainLayout } from '@/components/layout/MainLayout';
 import { LoadingSkeleton, CardSkeleton } from '@/components/ui/loading-skeleton';
-import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
 
 const ctaCards = [
@@ -45,11 +42,7 @@ const ctaCards = [
 ];
 
 export default function Dashboard() {
-  console.log('📊 [DASHBOARD] Dashboard rendering...');
-  const { user } = useAuth();
-  console.log('👤 [DASHBOARD] User:', user);
   const { ideas, loading, fetchIdeas } = useIdeaStore();
-  console.log('💡 [DASHBOARD] Ideas:', ideas, 'Loading:', loading);
 
   useEffect(() => {
     fetchIdeas();
@@ -60,16 +53,16 @@ export default function Dashboard() {
   const approvedIdeas = ideas.filter(idea => idea.status === 'aprovada').length;
 
   return (
-    <MainLayout>
-      <div className="p-6 space-y-8">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6 space-y-8">
         {/* Welcome Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="space-y-2"
         >
-          <h1 className="text-4xl font-bold">
-            Olá, {user?.name?.split(' ')[0]} 👋
+          <h1 className="text-4xl font-bold text-foreground">
+            Dashboard 👋
           </h1>
           <p className="text-xl text-muted-foreground">
             Pronto para transformar ideias em inovação?
@@ -234,6 +227,6 @@ export default function Dashboard() {
           </Card>
         </motion.div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

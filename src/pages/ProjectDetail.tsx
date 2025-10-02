@@ -15,7 +15,6 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MainLayout } from '@/components/layout/MainLayout';
 import { useToast } from '@/hooks/use-toast';
 
 interface Project {
@@ -104,21 +103,21 @@ export default function ProjectDetail() {
 
   if (loading) {
     return (
-      <MainLayout>
-        <div className="p-6">
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto p-6">
           <h1 className="text-3xl font-bold mb-2">Carregando...</h1>
           <div className="flex items-center justify-center h-96">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          </div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </div>
-      </MainLayout>
+      </div>
+      </div>
     );
   }
 
   if (!project) {
     return (
-      <MainLayout>
-        <div className="p-6">
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto p-6">
           <h1 className="text-3xl font-bold mb-2">Projeto não encontrado</h1>
           <div className="text-center py-12">
             <h3 className="text-lg font-semibold mb-2">Projeto não encontrado</h3>
@@ -133,13 +132,13 @@ export default function ProjectDetail() {
             </Button>
           </div>
         </div>
-      </MainLayout>
+      </div>
     );
   }
 
   return (
-    <MainLayout>
-      <div className="p-6 space-y-8">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -306,11 +305,11 @@ export default function ProjectDetail() {
                     </p>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

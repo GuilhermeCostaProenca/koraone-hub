@@ -6,8 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { AppLayout } from '@/components/layout/app-layout';
-import { useAuth } from '@/auth';
 import { useToast } from '@/hooks/use-toast';
 
 interface ChatMessage {
@@ -46,7 +44,6 @@ export default function Assistant() {
   const [inputMessage, setInputMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { user } = useAuth();
   const { toast } = useToast();
 
   const scrollToBottom = () => {
@@ -62,11 +59,11 @@ export default function Assistant() {
     const welcomeMessage: ChatMessage = {
       id: 'welcome',
       type: 'assistant',
-      content: `Olá, ${user?.name}! Sou a Aurora, sua assistente de inovação. Estou aqui para ajudá-lo a transformar suas ideias em realidade. Como posso ajudá-lo hoje?`,
+      content: `Olá! Sou a Aurora, sua assistente de inovação. Estou aqui para ajudá-lo a transformar suas ideias em realidade. Como posso ajudá-lo hoje?`,
       timestamp: new Date().toISOString()
     };
     setMessages([welcomeMessage]);
-  }, [user]);
+  }, []);
 
   const sendMessage = async (content: string) => {
     if (!content.trim()) return;
@@ -132,11 +129,14 @@ export default function Assistant() {
   };
 
   return (
-    <AppLayout
-      title="Aurora IA"
-      subtitle="Sua assistente inteligente de inovação"
-    >
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold">Aurora IA</h1>
+          <p className="text-muted-foreground">Sua assistente inteligente de inovação</p>
+        </div>
+        
+        <div className="max-w-4xl mx-auto">
         {/* Quick Actions */}
         {messages.length <= 1 && (
           <motion.div
@@ -210,11 +210,11 @@ export default function Assistant() {
                           ? 'bg-primary text-primary-foreground' 
                           : 'bg-gradient-primary text-primary-foreground'
                       }>
-                        {message.type === 'user' ? (
-                          user?.avatar || <User className="h-4 w-4" />
-                        ) : (
-                          <Bot className="h-4 w-4" />
-                        )}
+                    {message.type === 'user' ? (
+                      <User className="h-4 w-4" />
+                    ) : (
+                      <Bot className="h-4 w-4" />
+                    )}
                       </AvatarFallback>
                     </Avatar>
                     
@@ -276,13 +276,14 @@ export default function Assistant() {
                   disabled={loading || !inputMessage.trim()}
                   className="px-3"
                 >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </form>
-            </div>
-          </CardContent>
-        </Card>
+                <Send className="h-4 w-4" />
+              </Button>
+            </form>
+          </div>
+        </CardContent>
+      </Card>
+        </div>
       </div>
-    </AppLayout>
+    </div>
   );
 }

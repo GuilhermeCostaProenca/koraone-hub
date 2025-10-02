@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MainLayout } from '@/components/layout/MainLayout';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -83,8 +82,8 @@ export default function Projects() {
   const kpis = getKPIs();
 
   return (
-    <MainLayout>
-      <div className="p-6 space-y-8">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -278,12 +277,12 @@ export default function Projects() {
                     </div>
                   )}
                 </CardContent>
-              </Card>
-            </motion.div>
-          ))
-        )}
-      </motion.div>
+          </Card>
+        </motion.div>
+      ))
+    )}
+  </motion.div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

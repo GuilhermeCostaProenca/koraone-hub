@@ -6,23 +6,18 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { MainLayout } from '@/components/layout/MainLayout';
 import { LoadingSkeleton, CardSkeleton } from '@/components/ui/loading-skeleton';
-import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
 import { IdeaStatus } from '@/types';
 
 export default function Trail() {
-  const { user } = useAuth();
-  const { ideas, myIdeas, loading, fetchIdeas } = useIdeaStore();
+  const { ideas, loading, fetchIdeas } = useIdeaStore();
 
   useEffect(() => {
-    if (user) {
-      fetchIdeas(true); // Fetch only my ideas
-    }
-  }, [fetchIdeas, user]);
+    fetchIdeas();
+  }, [fetchIdeas]);
 
-  const userIdeas = ideas.filter(idea => idea.author.id === user?.id) || [];
+  const userIdeas = ideas || [];
   const sentIdeas = userIdeas.filter(idea => idea.status === 'enviada').length;
   const approvedIdeas = userIdeas.filter(idea => idea.status === 'aprovada').length;
   const totalLikes = userIdeas.reduce((sum, idea) => sum + idea.likes, 0);
@@ -54,8 +49,8 @@ export default function Trail() {
   };
 
   return (
-    <MainLayout>
-      <div className="p-6 space-y-8">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -217,9 +212,9 @@ export default function Trail() {
                 </div>
               )}
             </CardContent>
-          </Card>
-        </motion.div>
+      </Card>
+    </motion.div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

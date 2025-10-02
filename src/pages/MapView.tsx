@@ -6,11 +6,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { AppLayout } from '@/components/layout/app-layout';
 import L from 'leaflet';
 import { Link } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
-import { MainLayout } from '@/components/layout/MainLayout';
 import { LoadingSkeleton } from '@/components/ui/loading-skeleton';
 
 // Fix for default markers in react-leaflet
@@ -77,8 +75,8 @@ export default function MapView() {
   // Don't render anything on server side
   if (typeof window === 'undefined' || loading) {
     return (
-      <MainLayout>
-        <div className="p-6 space-y-6">
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto p-6 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold flex items-center gap-3">
@@ -92,16 +90,16 @@ export default function MapView() {
           </div>
           <div className="flex items-center justify-center h-96">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            <span className="ml-2">Carregando ideias no mapa...</span>
-          </div>
+          <span className="ml-2">Carregando ideias no mapa...</span>
         </div>
-      </MainLayout>
+      </div>
+      </div>
     );
   }
 
   return (
-    <MainLayout>
-      <div className="p-6 space-y-6">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6 space-y-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -184,12 +182,12 @@ export default function MapView() {
                       </Marker>
                     );
                   })}
-                </MapContainer>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+            </MapContainer>
+          )}
+        </div>
+      </CardContent>
+    </Card>
       </div>
-    </MainLayout>
+    </div>
   );
 }

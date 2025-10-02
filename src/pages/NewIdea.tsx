@@ -6,15 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
 import { useToast } from '@/hooks/use-toast';
 import { IdeaCreateData } from '@/types';
 
 export default function NewIdea() {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { createIdea, loading } = useIdeaStore();
   const { toast } = useToast();
 
@@ -33,7 +30,7 @@ export default function NewIdea() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!user) return;
+    const mockUser = { id: "demo", name: "Demo User", email: "demo@kora.one", avatar: "DU" };
 
     try {
       const dataToSubmit: IdeaCreateData = {
@@ -43,7 +40,7 @@ export default function NewIdea() {
           : undefined
       };
 
-      await createIdea(dataToSubmit, user);
+      await createIdea(dataToSubmit, mockUser);
       
       toast({
         title: "Ideia enviada com sucesso!",
@@ -61,8 +58,8 @@ export default function NewIdea() {
   };
 
   return (
-    <MainLayout>
-      <div className="p-6">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6">
         <div className="max-w-2xl mx-auto space-y-6">
           {/* Header */}
           <motion.div
@@ -219,6 +216,6 @@ export default function NewIdea() {
           </motion.div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 }

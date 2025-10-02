@@ -8,7 +8,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MainLayout } from '@/components/layout/MainLayout';
 import { LoadingSkeleton, CardSkeleton } from '@/components/ui/loading-skeleton';
 import { useIdeaStore } from '@/stores/ideaStore';
 import { Idea, IdeaStatus } from '@/types';
@@ -75,8 +74,8 @@ export default function Ideas() {
   };
 
   return (
-    <MainLayout>
-      <div className="p-6 space-y-6">
+    <div className="min-h-screen bg-background">
+      <div className="container mx-auto p-6 space-y-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -248,13 +247,13 @@ export default function Ideas() {
                         )}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))
-          )}
-        </motion.div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    ))
+  )}
+</motion.div>
       </div>
-    </MainLayout>
+    </div>
   );
 }
