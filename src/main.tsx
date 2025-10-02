@@ -8,6 +8,7 @@ async function enableMocking() {
     return;
   }
   
+  console.log('🔧 [MAIN] Starting MSW...');
   const { worker } = await import('./mocks/browser');
   
   return worker.start({
@@ -15,10 +16,18 @@ async function enableMocking() {
   });
 }
 
+console.log('🚀 [MAIN] Starting application...');
+
 enableMocking().then(() => {
-  createRoot(document.getElementById("root")!).render(
+  console.log('✅ [MAIN] MSW started, rendering React...');
+  const root = document.getElementById("root");
+  console.log('📦 [MAIN] Root element:', root);
+  
+  createRoot(root!).render(
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
   );
+  
+  console.log('🎨 [MAIN] React rendered!');
 });

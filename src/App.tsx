@@ -18,6 +18,7 @@ import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import Assistant from "./pages/Assistant";
 import NotFound from "./pages/NotFound";
+import Test from "./pages/Test";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 const App = () => {
+  console.log('🎯 [APP] App component rendering...');
+  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -41,6 +44,7 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <Routes>
+                <Route path="/test" element={<Test />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
                 <Route

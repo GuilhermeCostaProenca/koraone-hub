@@ -45,8 +45,11 @@ const ctaCards = [
 ];
 
 export default function Dashboard() {
+  console.log('📊 [DASHBOARD] Dashboard rendering...');
   const { user } = useAuth();
+  console.log('👤 [DASHBOARD] User:', user);
   const { ideas, loading, fetchIdeas } = useIdeaStore();
+  console.log('💡 [DASHBOARD] Ideas:', ideas, 'Loading:', loading);
 
   useEffect(() => {
     fetchIdeas();
