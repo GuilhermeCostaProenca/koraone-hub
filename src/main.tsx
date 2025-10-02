@@ -3,21 +3,24 @@ import { createRoot } from "react-dom/client";
 import App from './App.tsx';
 import "./index.css";
 
-async function enableMocking() {
-  if (process.env.NODE_ENV !== 'development') {
-    return;
-  }
-
-  const { worker } = await import('./mocks/browser');
-  return worker.start({
-    onUnhandledRequest: 'bypass',
-  });
+// ETAPA 1: MSW não bloqueante - renderiza imediatamente
+if (process.env.NODE_ENV === 'development') {
+  import('./mocks/browser')
+    .then(({ worker }) => {
+      worker.start({
+        onUnhandledRequest: 'bypass',
+      }).catch((error) => {
+        console.warn('⚠️ MSW failed to start:', error);
+      });
+    })
+    .catch((error) => {
+      console.warn('⚠️ MSW import failed:', error);
+    });
 }
 
-enableMocking().then(() => {
-  createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  );
-});
+// Renderiza imediatamente sem esperar o MSW
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);

@@ -9,8 +9,9 @@
 @layer base {
   :root {
     /* KoraOne Brand Colors */
-    --background: 220 15% 6.5%; /* #0E1116 */
-    --foreground: 210 20% 95%;
+    /* ETAPA 3: Background temporariamente mais claro para debug */
+    --background: 220 15% 12%; /* Mais claro para debug - antes era 6.5% */
+    --foreground: 210 20% 98%; /* Mais claro para melhor visibilidade */
     
     --card: 220 15% 7.5%; /* #12151C */
     --card-foreground: 210 20% 95%;
