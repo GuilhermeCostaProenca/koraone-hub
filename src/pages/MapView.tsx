@@ -66,9 +66,9 @@ const MOCK_MAP_IDEAS: MapIdea[] = [
   }
 ];
 
+// Mapa simplificado - dados mockados direto
 export default function MapView() {
-  const [mapIdeas, setMapIdeas] = useState<MapIdea[]>(MOCK_MAP_IDEAS);
-  const [loading, setLoading] = useState(false);
+  const [mapIdeas] = useState<MapIdea[]>(MOCK_MAP_IDEAS);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -83,33 +83,8 @@ export default function MapView() {
     }
   };
 
-  // Don't render anything on server side
-  if (typeof window === 'undefined' || loading) {
   return (
     <div className="min-h-screen bg-background lg:ml-20">
-        <div className="container mx-auto p-6 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold flex items-center gap-3">
-                <Map className="h-8 w-8 text-primary" />
-                Mapa de Ideias
-              </h1>
-              <p className="text-muted-foreground">
-                Explore projetos inovadores em todo o ecossistema
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center justify-center h-96">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          <span className="ml-2">Carregando ideias no mapa...</span>
-        </div>
-      </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
       <div className="container mx-auto p-6 space-y-6">
         {/* Header */}
         <motion.div
@@ -132,72 +107,55 @@ export default function MapView() {
             {mapIdeas.length} ideias localizadas
           </div>
         </motion.div>
-        {/* Map */}
-        <Card className="glass-effect overflow-hidden">
-          <CardContent className="p-0">
-            <div className="h-[600px] relative">
-              {typeof window !== 'undefined' && (
-                <MapContainer
-                  center={[-23.5505, -46.6333]}
-                  zoom={12}
-                  className="h-full w-full"
-                  zoomControl={false}
+
+        {/* Mapa simplificado com cards */}
+        <Card className="glass-effect">
+          <CardContent className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {mapIdeas.map((idea) => (
+                <motion.div
+                  key={idea.id}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="p-4 border border-border rounded-lg hover:border-primary transition-colors"
                 >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
+                  <div className="flex items-start gap-3 mb-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                        {idea.author.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm">{idea.author.name}</p>
+                      <Badge className={`${getStatusColor(idea.status)} mt-1`}>
+                        {idea.status}
+                      </Badge>
+                    </div>
+                  </div>
                   
-                  {mapIdeas.map((idea) => {
-                    if (!idea.lat || !idea.lng) return null;
-                    
-                    return (
-                      <Marker 
-                        key={idea.id} 
-                        position={[idea.lat, idea.lng]}
-                        icon={customIcon}
-                      >
-                        <Popup>
-                          <div className="min-w-[250px] p-2">
-                            <div className="flex items-start gap-3 mb-3">
-                              <Avatar className="h-8 w-8 flex-shrink-0">
-                                <AvatarFallback className="bg-primary text-primary-foreground text-xs">
-                                  {idea.author.avatar}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1 min-w-0">
-                                <p className="font-medium text-sm">{idea.author.name}</p>
-                                <Badge className={getStatusColor(idea.status)}>
-                                  {idea.status}
-                                </Badge>
-                              </div>
-                            </div>
-                            
-                            <h4 className="font-semibold text-base mb-2 line-clamp-2">
-                              {idea.title}
-                            </h4>
-                            
-                            <Button 
-                              size="sm" 
-                              variant="outline" 
-                              className="w-full"
-                              asChild
-                            >
-                              <Link to={`/ideas?highlight=${idea.id}`}>
-                                <ExternalLink className="h-3 w-3 mr-1" />
-                                Ver no Feed
-                              </Link>
-                            </Button>
-                          </div>
-                        </Popup>
-                      </Marker>
-                    );
-                  })}
-            </MapContainer>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+                  <h4 className="font-semibold mb-2">{idea.title}</h4>
+                  
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <MapPin className="h-3 w-3" />
+                    São Paulo, SP
+                  </div>
+                  
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="w-full mt-3"
+                    asChild
+                  >
+                    <Link to={`/ideas?highlight=${idea.id}`}>
+                      <ExternalLink className="h-3 w-3 mr-1" />
+                      Ver no Feed
+                    </Link>
+                  </Button>
+                </motion.div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
