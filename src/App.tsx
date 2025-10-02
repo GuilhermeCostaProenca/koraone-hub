@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { NavbarProvider } from "@/contexts/NavbarContext";
+import { Navbar } from "@/components/ui/navbar";
 import Dashboard from "./pages/Dashboard";
 import NewIdea from "./pages/NewIdea";
 import Ideas from "./pages/Ideas";
@@ -22,19 +24,22 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/idea/new" element={<NewIdea />} />
-            <Route path="/ideas" element={<Ideas />} />
-            <Route path="/map" element={<MapView />} />
-            <Route path="/trail" element={<Trail />} />
-            <Route path="/insights" element={<Insights />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/projects/:id" element={<ProjectDetail />} />
-            <Route path="/assistant" element={<Assistant />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
+          <NavbarProvider>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/idea/new" element={<NewIdea />} />
+              <Route path="/ideas" element={<Ideas />} />
+              <Route path="/map" element={<MapView />} />
+              <Route path="/trail" element={<Trail />} />
+              <Route path="/insights" element={<Insights />} />
+              <Route path="/projects" element={<Projects />} />
+              <Route path="/projects/:id" element={<ProjectDetail />} />
+              <Route path="/assistant" element={<Assistant />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </NavbarProvider>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

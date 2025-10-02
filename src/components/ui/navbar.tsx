@@ -6,7 +6,6 @@ import {
   Trophy, 
   Route, 
   Brain, 
-  LogOut, 
   Menu,
   Sparkles,
   ChevronLeft,
@@ -15,9 +14,7 @@ import {
   FolderOpen
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { useAuth } from '@/auth';
 import { useNavbar } from '@/contexts/NavbarContext';
 import { cn } from '@/lib/utils';
 
@@ -34,13 +31,7 @@ const navigationItems = [
 // Mobile Sidebar Component
 function MobileSidebar() {
   const location = useLocation();
-  const { user, logout } = useAuth();
   const { setIsOpen } = useNavbar();
-
-  const handleLogout = () => {
-    logout();
-    setIsOpen(false);
-  };
 
   return (
     <Sheet>
@@ -66,22 +57,6 @@ function MobileSidebar() {
             </div>
           </div>
 
-          {/* User Info */}
-          {user && (
-            <div className="p-6 border-b border-border">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback className="bg-primary text-primary-foreground font-medium">
-                    {user.avatar}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-sm truncate">{user.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Navigation */}
           <div className="flex-1 space-y-2 p-4">
@@ -106,17 +81,6 @@ function MobileSidebar() {
             })}
           </div>
 
-          {/* Logout */}
-          <div className="border-t border-border p-4">
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive"
-            >
-              <LogOut className="h-5 w-5" />
-              Sair
-            </Button>
-          </div>
         </div>
       </SheetContent>
     </Sheet>
@@ -127,7 +91,6 @@ function MobileSidebar() {
 function DesktopSidebar() {
   const { isCollapsed, setIsCollapsed } = useNavbar();
   const location = useLocation();
-  const { user, logout } = useAuth();
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
@@ -176,33 +139,6 @@ function DesktopSidebar() {
         </Button>
       </div>
 
-      {/* User Info */}
-      {user && !isCollapsed && (
-        <div className="p-6 border-b border-border">
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
-              <AvatarFallback className="bg-primary text-primary-foreground font-medium">
-                {user.avatar}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate">{user.name}</p>
-              <p className="text-xs text-muted-foreground truncate">{user.email}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Collapsed User Avatar */}
-      {user && isCollapsed && (
-        <div className="p-3 border-b border-border flex justify-center">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback className="bg-primary text-primary-foreground font-medium text-xs">
-              {user.avatar}
-            </AvatarFallback>
-          </Avatar>
-        </div>
-      )}
 
       {/* Navigation */}
       <div className={cn("flex-1 space-y-2", isCollapsed ? "p-2" : "p-4")}>
@@ -229,21 +165,6 @@ function DesktopSidebar() {
         })}
       </div>
 
-      {/* Logout */}
-      <div className={cn("border-t border-border", isCollapsed ? "p-2" : "p-4")}>
-        <Button
-          variant="ghost"
-          onClick={logout}
-          className={cn(
-            "w-full text-muted-foreground hover:text-destructive",
-            isCollapsed ? "justify-center p-3" : "justify-start gap-3"
-          )}
-          title={isCollapsed ? "Sair" : undefined}
-        >
-          <LogOut className="h-5 w-5" />
-          {!isCollapsed && "Sair"}
-        </Button>
-      </div>
     </div>
   );
 }

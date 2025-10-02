@@ -53,7 +53,7 @@ export default function Dashboard() {
   const approvedIdeas = ideas.filter(idea => idea.status === 'aprovada').length;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background lg:ml-20">
       <div className="container mx-auto p-6 space-y-8">
         {/* Welcome Section */}
         <motion.div

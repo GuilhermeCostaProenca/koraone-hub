@@ -87,7 +87,7 @@ export default function Insights() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background lg:ml-20">
       <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
         <motion.div

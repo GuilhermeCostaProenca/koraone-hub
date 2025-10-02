@@ -58,7 +58,7 @@ export default function NewIdea() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background lg:ml-20">
       <div className="container mx-auto p-6">
         <div className="max-w-2xl mx-auto space-y-6">
           {/* Header */}

@@ -103,7 +103,7 @@ export default function ProjectDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background lg:ml-20">
         <div className="container mx-auto p-6">
           <h1 className="text-3xl font-bold mb-2">Carregando...</h1>
           <div className="flex items-center justify-center h-96">
@@ -116,7 +116,7 @@ export default function ProjectDetail() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background lg:ml-20">
         <div className="container mx-auto p-6">
           <h1 className="text-3xl font-bold mb-2">Projeto não encontrado</h1>
           <div className="text-center py-12">
@@ -137,7 +137,7 @@ export default function ProjectDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background lg:ml-20">
       <div className="container mx-auto p-6 space-y-8">
         {/* Header */}
         <motion.div
