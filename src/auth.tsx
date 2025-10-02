@@ -31,6 +31,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAuthenticated(true);
       localStorage.setItem('demo_auth', 'true');
       localStorage.setItem('demo_user', JSON.stringify(DEMO_USER));
+      // Sync with koraone_user for compatibility
+      localStorage.setItem('koraone_user', JSON.stringify(DEMO_USER));
     } else {
       // Real authentication flow would go here
       // This is where you'd integrate with your backend
@@ -42,6 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (NO_AUTH) {
       localStorage.removeItem('demo_auth');
       localStorage.removeItem('demo_user');
+      localStorage.removeItem('koraone_user');
     } else {
       // Real logout flow would go here
     }
@@ -73,6 +76,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticated(true);
         localStorage.setItem('demo_auth', 'true');
         localStorage.setItem('demo_user', JSON.stringify(DEMO_USER));
+        // Sync with koraone_user for compatibility
+        localStorage.setItem('koraone_user', JSON.stringify(DEMO_USER));
       }
     } else {
       // Real initialization flow would go here

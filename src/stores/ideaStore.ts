@@ -100,7 +100,23 @@ export const useIdeaStore = create<IdeaState>((set, get) => ({
       return createdIdea;
     } catch (error) {
       console.error('Error creating idea:', error);
-      set({ loading: false });
+      // Fallback: add locally with generated ID
+      const localIdea: Idea = {
+        id: Date.now().toString(),
+        title: data.title,
+        description: data.description,
+        impact: data.impact,
+        location: data.location,
+        author: user,
+        status: 'enviada',
+        likes: 0,
+        createdAt: new Date().toISOString()
+      };
+      set(state => ({
+        ideas: [localIdea, ...state.ideas],
+        loading: false
+      }));
+      return localIdea;
     }
   },
 
@@ -111,7 +127,7 @@ export const useIdeaStore = create<IdeaState>((set, get) => ({
       const data = await response.json();
       
       if (mine) {
-        const currentUser = JSON.parse(localStorage.getItem('koraone_user') || '{}');
+        const currentUser = JSON.parse(localStorage.getItem('koraone_user') || localStorage.getItem('demo_user') || '{}');
         const myIdeas = data.filter((idea: Idea) => idea.author.id === currentUser.id);
         set({ ideas: data, myIdeas, loading: false });
       } else {
@@ -119,7 +135,8 @@ export const useIdeaStore = create<IdeaState>((set, get) => ({
       }
     } catch (error) {
       console.error('Error fetching ideas:', error);
-      set({ loading: false });
+      // Fallback to mock data
+      set({ ideas: mockIdeas, loading: false });
     }
   },
 
@@ -138,6 +155,15 @@ export const useIdeaStore = create<IdeaState>((set, get) => ({
       });
     } catch (error) {
       console.error('Error liking idea:', error);
+      // Fallback: increment locally
+      const { ideas } = get();
+      set({
+        ideas: ideas.map(idea => 
+          idea.id === id 
+            ? { ...idea, likes: (idea.likes || 0) + 1, isLiked: true }
+            : idea
+        )
+      });
     }
   },
 
