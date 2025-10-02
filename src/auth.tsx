@@ -6,6 +6,7 @@ const NO_AUTH = true; // Change to false when backend is ready
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (email?: string) => Promise<void>;
   logout: () => void;
   initialize: () => void;
@@ -21,24 +22,18 @@ const DEMO_USER: User = {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  console.log('🔐 [AUTH] AuthProvider mounting...');
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const login = async (email?: string) => {
-    console.log('🔑 [AUTH] Login called, NO_AUTH:', NO_AUTH);
     if (NO_AUTH) {
-      // Demo mode - no network requests
-      console.log('✅ [AUTH] Setting demo user');
       setUser(DEMO_USER);
       setIsAuthenticated(true);
       localStorage.setItem('demo_auth', 'true');
       localStorage.setItem('demo_user', JSON.stringify(DEMO_USER));
-      // Sync with koraone_user for compatibility
       localStorage.setItem('koraone_user', JSON.stringify(DEMO_USER));
     } else {
-      // Real authentication flow would go here
-      // This is where you'd integrate with your backend
       throw new Error('Real authentication not implemented yet');
     }
   };
@@ -57,49 +52,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const initialize = () => {
-    console.log('🔄 [AUTH] Initialize called, NO_AUTH:', NO_AUTH);
     if (NO_AUTH) {
-      // Check for demo auth in localStorage
       const demoAuth = localStorage.getItem('demo_auth');
       const demoUser = localStorage.getItem('demo_user');
-      console.log('📦 [AUTH] LocalStorage - demoAuth:', demoAuth, 'demoUser:', demoUser);
       
       if (demoAuth === 'true' && demoUser) {
         try {
           const parsedUser = JSON.parse(demoUser);
-          console.log('✅ [AUTH] Parsed user from localStorage:', parsedUser);
           setUser(parsedUser);
           setIsAuthenticated(true);
         } catch (error) {
-          console.error('❌ [AUTH] Error parsing demo user:', error);
-          // Clear invalid data
           localStorage.removeItem('demo_auth');
           localStorage.removeItem('demo_user');
         }
       } else {
-        // In NO_AUTH mode, automatically authenticate as demo user
-        console.log('🆕 [AUTH] No localStorage auth, setting demo user automatically');
         setUser(DEMO_USER);
         setIsAuthenticated(true);
         localStorage.setItem('demo_auth', 'true');
         localStorage.setItem('demo_user', JSON.stringify(DEMO_USER));
-        // Sync with koraone_user for compatibility
         localStorage.setItem('koraone_user', JSON.stringify(DEMO_USER));
       }
-    } else {
-      // Real initialization flow would go here
-      // Check for real auth tokens, validate with backend, etc.
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
     initialize();
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AuthContext.Provider value={{
       user,
       isAuthenticated,
+      isLoading,
       login,
       logout,
       initialize
