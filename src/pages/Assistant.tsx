@@ -80,7 +80,9 @@ export default function Assistant() {
     setLoading(true);
 
     try {
-      const response = await fetch('/aurora/chat', {
+      // Chama a edge function aurora-chat
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const response = await fetch(`${supabaseUrl}/functions/v1/aurora-chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -88,8 +90,9 @@ export default function Assistant() {
         body: JSON.stringify({ message: content.trim() }),
       });
 
+      const data = await response.json();
+      
       if (response.ok) {
-        const data = await response.json();
         const assistantMessage: ChatMessage = {
           id: (Date.now() + 1).toString(),
           type: 'assistant',
@@ -98,7 +101,7 @@ export default function Assistant() {
         };
         setMessages(prev => [...prev, assistantMessage]);
       } else {
-        throw new Error('Failed to send message');
+        throw new Error(data.error || 'Failed to send message');
       }
     } catch (error) {
       console.error('Error sending message:', error);

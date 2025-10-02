@@ -38,26 +38,37 @@ interface MapIdea {
   };
 }
 
+// Mock data simples para o mapa
+const MOCK_MAP_IDEAS: MapIdea[] = [
+  {
+    id: '1',
+    title: 'Plataforma de IA para atendimento',
+    status: 'aprovada',
+    lat: -23.5505,
+    lng: -46.6333,
+    author: { name: 'Ana Silva', avatar: 'AS' }
+  },
+  {
+    id: '2',
+    title: 'App de sustentabilidade corporativa',
+    status: 'em avaliação',
+    lat: -23.5615,
+    lng: -46.6565,
+    author: { name: 'Carlos Mendes', avatar: 'CM' }
+  },
+  {
+    id: '3',
+    title: 'Sistema de gestão de inovação',
+    status: 'enviada',
+    lat: -23.5489,
+    lng: -46.6388,
+    author: { name: 'Beatriz Costa', avatar: 'BC' }
+  }
+];
+
 export default function MapView() {
-  const [mapIdeas, setMapIdeas] = useState<MapIdea[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchMapIdeas = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/ideas/map');
-        const data = await response.json();
-        setMapIdeas(data);
-      } catch (error) {
-        console.error('Error fetching map ideas:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMapIdeas();
-  }, []);
+  const [mapIdeas, setMapIdeas] = useState<MapIdea[]>(MOCK_MAP_IDEAS);
+  const [loading, setLoading] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {
