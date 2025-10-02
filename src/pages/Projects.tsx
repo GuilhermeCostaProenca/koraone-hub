@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { AppLayout } from '@/components/layout/app-layout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -83,17 +83,28 @@ export default function Projects() {
   const kpis = getKPIs();
 
   return (
-    <AppLayout
-      title="Meus Projetos"
-      subtitle="Acompanhe o progresso dos seus projetos de inovação"
-      action={
-        <Button className="bg-gradient-primary">
-          <Plus className="h-4 w-4 mr-2" />
-          Novo Projeto
-        </Button>
-      }
-    >
-      {/* KPIs */}
+    <MainLayout>
+      <div className="p-6 space-y-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        >
+          <div>
+            <h1 className="text-3xl font-bold">Projetos</h1>
+            <p className="text-muted-foreground">Acompanhe projetos em desenvolvimento</p>
+          </div>
+          
+          <Link to="/idea/new">
+            <Button variant="gradient">
+              <Plus className="h-4 w-4 mr-2" />
+              Novo Projeto
+            </Button>
+          </Link>
+        </motion.div>
+
+        {/* KPIs */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -272,6 +283,7 @@ export default function Projects() {
           ))
         )}
       </motion.div>
-    </AppLayout>
+      </div>
+    </MainLayout>
   );
 }

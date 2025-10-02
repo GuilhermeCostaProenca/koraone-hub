@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Navbar } from '@/components/ui/navbar';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { LoadingSkeleton, CardSkeleton } from '@/components/ui/loading-skeleton';
 import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
@@ -54,10 +54,8 @@ export default function Trail() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <main className="lg:ml-70 p-6 space-y-8">
+    <MainLayout>
+      <div className="p-6 space-y-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -221,7 +219,7 @@ export default function Trail() {
             </CardContent>
           </Card>
         </motion.div>
-      </main>
-    </div>
+      </div>
+    </MainLayout>
   );
 }

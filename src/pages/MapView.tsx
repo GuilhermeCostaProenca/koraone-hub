@@ -10,6 +10,8 @@ import { AppLayout } from '@/components/layout/app-layout';
 import L from 'leaflet';
 import { Link } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { LoadingSkeleton } from '@/components/ui/loading-skeleton';
 
 // Fix for default markers in react-leaflet
 const customIcon = L.divIcon({
@@ -75,30 +77,52 @@ export default function MapView() {
   // Don't render anything on server side
   if (typeof window === 'undefined' || loading) {
     return (
-      <AppLayout
-        title="Mapa de Ideias"
-        subtitle="Explore projetos inovadores em todo o ecossistema"
-      >
-        <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-          <span className="ml-2">Carregando ideias no mapa...</span>
+      <MainLayout>
+        <div className="p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold flex items-center gap-3">
+                <Map className="h-8 w-8 text-primary" />
+                Mapa de Ideias
+              </h1>
+              <p className="text-muted-foreground">
+                Explore projetos inovadores em todo o ecossistema
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center justify-center h-96">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <span className="ml-2">Carregando ideias no mapa...</span>
+          </div>
         </div>
-      </AppLayout>
+      </MainLayout>
     );
   }
 
   return (
-    <AppLayout
-      title="Mapa de Ideias"
-      subtitle="Explore projetos inovadores em todo o ecossistema"
-      action={
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4" />
-          {mapIdeas.length} ideias localizadas
-        </div>
-      }
-    >
-
+    <MainLayout>
+      <div className="p-6 space-y-6">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+        >
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              <Map className="h-8 w-8 text-primary" />
+              Mapa de Ideias
+            </h1>
+            <p className="text-muted-foreground">
+              Explore projetos inovadores em todo o ecossistema
+            </p>
+          </div>
+          
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <MapPin className="h-4 w-4" />
+            {mapIdeas.length} ideias localizadas
+          </div>
+        </motion.div>
         {/* Map */}
         <Card className="glass-effect overflow-hidden">
           <CardContent className="p-0">
@@ -165,6 +189,7 @@ export default function MapView() {
             </div>
           </CardContent>
         </Card>
-    </AppLayout>
+      </div>
+    </MainLayout>
   );
 }

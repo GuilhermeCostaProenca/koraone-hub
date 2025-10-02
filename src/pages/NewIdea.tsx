@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Navbar } from '@/components/ui/navbar';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { useAuth } from '@/auth';
 import { useIdeaStore } from '@/stores/ideaStore';
 import { useToast } from '@/hooks/use-toast';
@@ -61,10 +61,8 @@ export default function NewIdea() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <main className="lg:ml-70 p-6">
+    <MainLayout>
+      <div className="p-6">
         <div className="max-w-2xl mx-auto space-y-6">
           {/* Header */}
           <motion.div
@@ -220,7 +218,7 @@ export default function NewIdea() {
             </Card>
           </motion.div>
         </div>
-      </main>
-    </div>
+      </div>
+    </MainLayout>
   );
 }

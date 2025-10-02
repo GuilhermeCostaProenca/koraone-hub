@@ -4,7 +4,7 @@ import { Brain, Sparkles, BookOpen, Video, Users, TrendingUp, Lightbulb } from '
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Navbar } from '@/components/ui/navbar';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { LoadingSkeleton } from '@/components/ui/loading-skeleton';
 import { Insight } from '@/types';
 
@@ -88,10 +88,8 @@ export default function Insights() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      
-      <main className="lg:ml-70 p-6 space-y-8">
+    <MainLayout>
+      <div className="p-6 space-y-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -244,7 +242,7 @@ export default function Insights() {
             </CardContent>
           </Card>
         </motion.div>
-      </main>
-    </div>
+      </div>
+    </MainLayout>
   );
 }
