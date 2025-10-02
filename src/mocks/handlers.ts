@@ -50,6 +50,40 @@ const staticDb = {
       impact: 'Automatizar 30% dos processos manuais e gerar insights preditivos para tomada de decisões.',
       likes: 15,
       createdAt: '2024-01-25T00:00:00.000Z'
+    },
+    {
+      id: '4',
+      title: 'Sistema de Feedback 360°',
+      description: 'Plataforma colaborativa para feedback contínuo entre equipes, promovendo cultura de melhoria.',
+      author: { id: '2', name: 'Hugo Oliveira', email: 'hugo@koraone.com', avatar: 'HO' },
+      status: 'aprovada' as const,
+      impact: 'Melhorar comunicação interna em 50% e aumentar engajamento dos colaboradores.',
+      likes: 20,
+      createdAt: '2024-01-28T00:00:00.000Z',
+      lat: -23.5520,
+      lng: -46.6350
+    },
+    {
+      id: '5',
+      title: 'Banco de Talentos Interno',
+      description: 'Criar uma plataforma para identificar e desenvolver talentos internos, facilitando mobilidade de carreira.',
+      author: { id: '1', name: 'Guilherme Costa', email: 'guilherme@koraone.com', avatar: 'GC' },
+      status: 'em avaliação' as const,
+      impact: 'Reduzir custos de recrutamento em 35% e aumentar retenção de talentos.',
+      likes: 18,
+      createdAt: '2024-02-01T00:00:00.000Z'
+    },
+    {
+      id: '6',
+      title: 'Automação de Processos RH',
+      description: 'Implementar RPA para automatizar tarefas repetitivas do RH, liberando tempo para atividades estratégicas.',
+      author: { id: '2', name: 'Hugo Oliveira', email: 'hugo@koraone.com', avatar: 'HO' },
+      status: 'enviada' as const,
+      impact: 'Economizar 500 horas mensais e reduzir erros operacionais em 80%.',
+      likes: 10,
+      createdAt: '2024-02-05T00:00:00.000Z',
+      lat: -23.5475,
+      lng: -46.6400
     }
   ],
   projects: [
@@ -61,7 +95,9 @@ const staticDb = {
       economy: 150000,
       impacted: 200,
       startedAt: '2024-02-01T00:00:00.000Z',
-      description: 'Projeto piloto para implementação do hub de inovação digital na empresa.'
+      description: 'Projeto piloto para implementação do hub de inovação digital na empresa.',
+      progress: 75,
+      nextMilestone: 'Expansão para outras unidades - Mar/2024'
     },
     {
       id: '2',
@@ -71,7 +107,45 @@ const staticDb = {
       economy: 80000,
       impacted: 50,
       startedAt: '2024-03-01T00:00:00.000Z',
-      description: 'Piloto para teste do novo sistema de gestão com IA.'
+      description: 'Piloto para teste do novo sistema de gestão com IA.',
+      progress: 40,
+      nextMilestone: 'Validação com usuários - Fev/2024'
+    },
+    {
+      id: '3',
+      title: 'Programa de Mentoria Tech',
+      owner: 'Hugo Oliveira',
+      status: 'ATIVO' as const,
+      economy: 120000,
+      impacted: 85,
+      startedAt: '2024-01-15T00:00:00.000Z',
+      description: 'Programa estruturado de mentoria para desenvolvimento técnico.',
+      progress: 60,
+      nextMilestone: 'Expansão para 100 mentorados - Mar/2024'
+    },
+    {
+      id: '4',
+      title: 'Automação RPA Financeiro',
+      owner: 'Guilherme Costa',
+      status: 'CONCLUÍDO' as const,
+      economy: 250000,
+      impacted: 120,
+      startedAt: '2023-10-01T00:00:00.000Z',
+      description: 'Automação de processos repetitivos do setor financeiro.',
+      progress: 100,
+      nextMilestone: 'Projeto concluído com sucesso'
+    },
+    {
+      id: '5',
+      title: 'Plataforma de Feedback 360°',
+      owner: 'Guilherme Costa',
+      status: 'PILOTO' as const,
+      economy: 45000,
+      impacted: 150,
+      startedAt: '2024-02-10T00:00:00.000Z',
+      description: 'Sistema de feedback contínuo e avaliação de desempenho.',
+      progress: 25,
+      nextMilestone: 'Coleta de feedback inicial - Mar/2024'
     }
   ],
   insights: [

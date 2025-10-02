@@ -30,7 +30,8 @@ export default function NewIdea() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const mockUser = { id: "demo", name: "Demo User", email: "demo@kora.one", avatar: "DU" };
+    const userStr = localStorage.getItem('koraone_user');
+    const user = userStr ? JSON.parse(userStr) : { id: "demo", name: "Demo User", email: "demo@kora.one", avatar: "DU" };
 
     try {
       const dataToSubmit: IdeaCreateData = {
@@ -40,7 +41,7 @@ export default function NewIdea() {
           : undefined
       };
 
-      await createIdea(dataToSubmit, mockUser);
+      await createIdea(dataToSubmit, user);
       
       toast({
         title: "Ideia enviada com sucesso!",
